@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Search } from "lucide-react";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="flex justify-center">
+        <div className="flex flex-col max-w-3xl items-center py-20">
+          <p className="md:text-5xl text-2xl font-semibold">
+            Next Gen Restaurant Finder
+          </p>
+          <p className="px-16 text-sm pt-2 text-center">
+            A simple restaurant finder powered by bleeding edge AI tech
+          </p>
+          <div className="w-full max-w-md mt-8 md:px-0 px-8">
+            <div className="flex flex-col">
+              <textarea
+                placeholder="Search for restaurants..."
+                className="w-full px-6 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent resize-none"
+                rows={6}
+              />
+              <button className="flex items-center justify-center mt-4 py-3 rounded-md w-full text-sm bg-black text-white hover:cursor-pointer">
+                <Search className="pe-2" /> Search
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
