@@ -1,7 +1,26 @@
+import axios from "axios";
+import { Loader, Search } from "lucide-react";
 import { useState } from "react";
 
 function App() {
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post("http://localhost:8000/api/execute", {
+        message: search,
+      });
+
+      console.log(response.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center">
@@ -20,8 +39,15 @@ function App() {
                 rows={6}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="flex items-center justify-center mt-4 py-3 rounded-md w-full text-sm bg-black text-white hover:cursor-pointer">
-                <Search className="pe-2" /> Search
+                <button
+                className={`flex items-center justify-center mt-4 py-3 rounded-md w-full text-sm ${
+                  !search ? 'bg-gray-300' : 'bg-black hover:cursor-pointer'
+                } text-white`}
+                onClick={handleSearch}
+                disabled={!search}
+                >
+                {isLoading ? <><Loader>Sample</Loader></> : <><Search className="pe-2" /> Search</>}
+                
               </button>
             </div>
           </div>
