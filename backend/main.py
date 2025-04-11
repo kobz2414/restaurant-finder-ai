@@ -36,11 +36,11 @@ def fetch_data(user_input: UserInput):
         The JSON command should contain the following fields:
         - action: A string representing the action to be performed.
         - parameters: A dictionary containing the following keys:
-            - query: A string representing the user's search query category only and no other description.
+            - query: A string to be matched against all content for this place, including but not limited to venue name, category, telephone number, taste, and tips.
             - near: The location or context for the search, if applicable.
             - max_price: A string representing the maximum price range for the search. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive.
             - min_price: A string representing the minimum price range for the search. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive.
-            - open_now: A boolean indicating whether to filter results by open status.
+            - open_now: A boolean indicating whether to filter results by open status. If not specified, leave it out.
 
         Your task is to convert the user input strictly into this JSON format.
         You should not include any additional text or explanation in your response.
