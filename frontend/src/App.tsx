@@ -5,6 +5,8 @@ import Results from "./components/Results.Component";
 import { ResultProps } from "./components/ResultContainer.Component";
 import { extractNextLinkHeader } from "./utils/common";
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
 function App() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<ResultProps[]>([]);
@@ -21,7 +23,7 @@ function App() {
       setResults([]);
       setNextPage("");
 
-      const response = await axios.post("http://localhost:8000/api/execute", {
+      const response = await axios.post(`${apiUrl}/api/execute`, {
         message: search,
       });
 
@@ -42,12 +44,9 @@ function App() {
       setIsLoadingNextPage(true);
       setNextPage("");
 
-      const response = await axios.post(
-        "http://localhost:8000/api/fetch-page",
-        {
-          link: nextPage,
-        }
-      );
+      const response = await axios.post(`${apiUrl}/api/fetch-page`, {
+        link: nextPage,
+      });
 
       const { data, next_page } = response.data;
 
