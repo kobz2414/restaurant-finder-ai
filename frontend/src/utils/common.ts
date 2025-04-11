@@ -12,3 +12,16 @@ export const extractNextLinkHeader = (linkHeader: string): string | null =>{
   const match = linkHeader.match(/<([^>]+)>;\s*rel="next"/);
   return match ? match[1] : null;
 }
+
+export const intToWeekday = (day: number): string => {
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  return days[day] || "";
+};

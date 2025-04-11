@@ -1,9 +1,10 @@
 import { MapPinned } from "lucide-react";
 import {
   generateGoogleMapsLink,
-  separateCapitalizedWords,
 } from "../utils/common";
 import Category from "./Category.Component";
+import Rating from "./Rating.Component";
+import OperatingHours from "./OperatingHours.Component";
 
 type Category = {
   id: number;
@@ -14,6 +15,17 @@ type Category = {
     prefix: string;
     suffix: string;
   };
+};
+
+export type Hours = {
+  open_now: boolean;
+  display: boolean;
+  is_local_holiday: boolean;
+  regular?: {
+    open: string;
+    close: string;
+    day: number;
+  }[];
 };
 
 export type ResultProps = {
@@ -56,6 +68,9 @@ export type ResultProps = {
     };
   };
   timezone: string;
+  rating?: number;
+  price?: string;
+  hours?: Hours;
 };
 
 type ResultContainerProps = {
@@ -65,25 +80,34 @@ type ResultContainerProps = {
 const ResultContainer = ({ result }: ResultContainerProps) => {
   const lat = result?.geocodes?.main?.latitude;
   const long = result?.geocodes?.main?.longitude;
+  const price = result?.price;
+  const rating = result?.rating || 0;
 
   return (
     <>
       <div className="flex flex-col p-6 my-2 border rounded-lg border-gray-100 justify-between">
         <div>
-          <div className="flex flex-row justify-between items-center pb-2">
-            <p className="text-xl font-bold">{result?.name}</p>
-            <a
-              href={generateGoogleMapsLink(lat, long)}
-              target="_blank"
-              className="text-sm"
-            >
-              <MapPinned size={16} />
-            </a>
+          <div>
+            <div className="flex flex-row justify-between items-center pb-1">
+              <p className="text-xl font-bold">{result?.name}</p>
+              <a
+                href={generateGoogleMapsLink(lat, long)}
+                target="_blank"
+                className="text-sm"
+              >
+                <MapPinned size={16} />
+              </a>
+            </div>
+            {rating > 0 && <Rating rating={rating!} />}
           </div>
-          <p className="text-sm pb-2">{result?.location?.formatted_address}</p>
-          <p className="text-sm">
-            Open: {separateCapitalizedWords(result?.closed_bucket)}
+
+          <p className="text-sm pt-4 pb-2">
+            {result?.location?.formatted_address}
           </p>
+          <div className="text-sm">
+            {price && <p>Price: {price}</p>}
+            <OperatingHours result={result}/>
+          </div>
         </div>
 
         <div className="flex flex-row flex-wrap gap-2 pt-4">
