@@ -65,29 +65,49 @@ def fetch_data(user_input: UserInput):
             web_search_options={},
             max_tokens=150,
         )
-        return response
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"User search analysis failed: {str(e)}"
         )
 
-    response_data = response.choices[0].message.content.strip()
-    cleaned_response = extract_json_from_markdown(response_data)
+    try:
+        response_data = response.choices[0].message.content.strip()
+        cleaned_response = extract_json_from_markdown(response_data)
 
-    filtered_params = {
-        key: value
-        for key, value in cleaned_response["parameters"].items()
-        if value is not None and value != ""
-    }
+        if "parameters" not in cleaned_response:
+            raise HTTPException(
+                status_code=400,
+                detail="Missing search parameters after user search analysis",
+            )
 
-    query_string = urlencode(filtered_params)
-    base_url = "https://api.foursquare.com/v3/places/search"
-    full_url = f"{base_url}?{query_string}"
+        filtered_params = {
+            key: value
+            for key, value in cleaned_response["parameters"].items()
+            if value is not None and value != ""
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=400, detail=f"Failed to parse user search JSON: {str(e)}"
+        )
 
-    headers = {
-        "Accept": "application/json",
-        "Authorization": os.getenv("FOURSQUARE_API_KEY"),
-    }
+    try:
+        query_string = urlencode(filtered_params)
+        base_url = "https://api.foursquare.com/v3/places/search"
+        full_url = f"{base_url}?{query_string}"
 
-    response = requests.get(full_url, headers=headers)
-    return response
+        headers = {
+            "Accept": "application/json",
+            "Authorization": os.getenv("FOURSQUARE_API_KEY"),
+        }
+
+        response = requests.get(full_url, headers=headers)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search request failed: {str(e)}")
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Search response error: {response.json().get('message', 'Unknown error')}",
+        )
