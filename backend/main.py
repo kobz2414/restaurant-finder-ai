@@ -29,9 +29,9 @@ app.add_middleware(
 @app.post("/api/execute")
 def fetch_data(user_input: UserInput):
     prompt = f"""
-        You are a helpful assistant that converts user input into a JSON command.
+        You are a helpful assistant that analyze and converts user input into a JSON command.
         The user primarily wants to search for a specific type of business or service.
-        Your task is to convert this user input into a structured JSON command.
+        Your task is to convert this user input into a structured JSON command and nothing else.
 
         The JSON command should contain the following fields:
         - action: A string representing the action to be performed.
@@ -76,6 +76,8 @@ def fetch_data(user_input: UserInput):
                 status_code=400,
                 detail="Missing search parameters after user search analysis",
             )
+        
+        print("Cleaned response:", cleaned_response)
 
         filtered_params = {
             key: value
