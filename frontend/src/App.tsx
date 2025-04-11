@@ -65,7 +65,7 @@ function App() {
     <>
       <div className="flex justify-center">
         <div className="flex flex-col max-w-3xl items-center py-20">
-          <p className="md:text-5xl text-2xl font-semibold">
+          <p className="sm:text-4xl text-2xl text-center font-bold">
             Next Gen Restaurant Finder
           </p>
           <p className="px-16 text-sm pt-2 text-center">
