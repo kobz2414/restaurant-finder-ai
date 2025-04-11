@@ -1,3 +1,4 @@
+import requests
 import os
 
 from openai import OpenAI
@@ -5,6 +6,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from urllib.parse import urlencode
+
+from utils.common import extract_json_from_markdown
 
 app = FastAPI()
 
@@ -66,3 +70,24 @@ def fetch_data(user_input: UserInput):
         raise HTTPException(
             status_code=500, detail=f"User search analysis failed: {str(e)}"
         )
+
+    response_data = response.choices[0].message.content.strip()
+    cleaned_response = extract_json_from_markdown(response_data)
+
+    filtered_params = {
+        key: value
+        for key, value in cleaned_response["parameters"].items()
+        if value is not None and value != ""
+    }
+
+    query_string = urlencode(filtered_params)
+    base_url = "https://api.foursquare.com/v3/places/search"
+    full_url = f"{base_url}?{query_string}"
+
+    headers = {
+        "Accept": "application/json",
+        "Authorization": os.getenv("FOURSQUARE_API_KEY"),
+    }
+
+    response = requests.get(full_url, headers=headers)
+    return response
