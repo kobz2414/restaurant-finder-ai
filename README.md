@@ -69,4 +69,4 @@ cd frontend
 npm run dev
 ```
 
-Then open [http://localhost:5173](http://localhost:5173) in your browser.
+Then open [http://localhost:5173](http://localhost:5173) for `Development` or [http://localhost:4173](http://localhost:4173) for `Production` in your browser.
