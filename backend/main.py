@@ -102,7 +102,34 @@ def fetch_data(user_input: UserInput):
         raise HTTPException(status_code=500, detail=f"Search request failed: {str(e)}")
 
     if response.status_code == 200:
-        return response.json()
+        return {
+            "data": response.json(),
+            "next_page": response.headers.get("Link", ""),
+        }
+    else:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Search response error: {response.json().get('message', 'Unknown error')}",
+        )
+
+
+@app.post("/api/fetch-page")
+def fetch_data(page_link: PageLinkInput):
+    try:
+        headers = {
+            "Accept": "application/json",
+            "Authorization": os.getenv("FOURSQUARE_API_KEY"),
+        }
+
+        response = requests.get(page_link.link, headers=headers)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search request failed: {str(e)}")
+
+    if response.status_code == 200:
+        return {
+            "data": response.json(),
+            "next_page": response.headers.get("Link", ""),
+        }
     else:
         raise HTTPException(
             status_code=response.status_code,
