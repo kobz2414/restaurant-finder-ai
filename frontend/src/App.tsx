@@ -12,9 +12,11 @@ function App() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
+  const [isUserSearching, setIsUserSearching] = useState(false);
 
   const handleSearch = async () => {
     try {
+      setIsUserSearching(false);
       setIsLoading(true);
       setResults([]);
       setNextPage("");
@@ -31,6 +33,7 @@ function App() {
       console.error(e);
     } finally {
       setIsLoading(false);
+      setIsUserSearching(true);
     }
   };
 
@@ -101,7 +104,7 @@ function App() {
               </button>
             </div>
 
-            {!isLoading && (
+            {!isLoading && isUserSearching && (
               <>
                 {results.length > 0 ? (
                   <Results results={results} />
