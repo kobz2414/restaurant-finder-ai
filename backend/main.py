@@ -37,7 +37,7 @@ def fetch_data(user_input: UserInput):
         - action: A string representing the action to be performed.
         - parameters: A dictionary containing the following keys:
             - query: A string to be matched against all content for this place, including but not limited to venue name, category, telephone number, taste, and tips.
-            - near: The location or context for the search, if applicable.
+            - near: The location or context for the search, if applicable. Can be a city, country, or specific address. Ex. Canada, Los Angeles, 123 Main St.
             - max_price: A string representing the maximum price range for the search. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive.
             - min_price: A string representing the minimum price range for the search. Valid values range between 1 (most affordable) to 4 (most expensive), inclusive.
             - open_now: A boolean indicating whether to filter results by open status. If not specified, leave it out.
