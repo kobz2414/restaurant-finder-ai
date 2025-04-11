@@ -5,10 +5,12 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from urllib.parse import urlencode
 
 from utils.common import extract_json_from_markdown
+
+from models.page import PageLinkInput
+from models.user import UserInput
 
 app = FastAPI()
 
@@ -23,11 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-class UserInput(BaseModel):
-    message: str
-
 
 @app.post("/api/execute")
 def fetch_data(user_input: UserInput):
