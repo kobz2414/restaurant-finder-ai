@@ -1,6 +1,7 @@
-import { Search } from "lucide-react";
+import { useState } from "react";
 
 function App() {
+  const [search, setSearch] = useState("");
   return (
     <>
       <div className="flex justify-center">
@@ -15,8 +16,9 @@ function App() {
             <div className="flex flex-col">
               <textarea
                 placeholder="Search for restaurants..."
-                className="w-full px-6 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent resize-none"
+                className="w-full px-6 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent resize-none"
                 rows={6}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <button className="flex items-center justify-center mt-4 py-3 rounded-md w-full text-sm bg-black text-white hover:cursor-pointer">
                 <Search className="pe-2" /> Search
