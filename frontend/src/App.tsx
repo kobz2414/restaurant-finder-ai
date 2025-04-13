@@ -81,11 +81,11 @@ function App() {
     <>
       <div className="flex justify-center">
         <div className="flex flex-col max-w-3xl items-center py-20">
-          <p className="sm:text-4xl text-2xl text-center font-bold">
-            Next Gen Restaurant Finder
+          <p className="sm:text-5xl text-3xl text-center font-bold">
+            Find What Feeds You
           </p>
           <p className="px-16 text-sm pt-2 text-center">
-            A simple restaurant finder powered by bleeding edge AI tech
+            A smart restaurant finder — and maybe more 👀
           </p>
           <div className="w-full max-w-lg mt-8 md:px-0 px-8">
             <div className="flex flex-col">
