@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Frown, Loader, Search } from "lucide-react";
 import { useState } from "react";
 import Results from "./components/Results.Component";
@@ -11,6 +11,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<ResultProps[]>([]);
   const [nextPage, setNextPage] = useState<string | null>("");
+  const [error, setError] = useState<Record<string, string>>({});
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNextPage, setIsLoadingNextPage] = useState(false);
@@ -21,6 +22,7 @@ function App() {
       setIsUserSearching(false);
       setIsLoading(true);
       setResults([]);
+      setError({});
       setNextPage("");
 
       const response = await axios.post(`${apiUrl}/api/execute`, {
@@ -31,8 +33,14 @@ function App() {
 
       setResults(data?.results || []);
       setNextPage(extractNextLinkHeader(next_page));
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      const err = error as AxiosError<{ detail: string }>;
+      console.error(err);
+
+      setError({
+        fetch:
+          err?.response?.data?.detail || "Something went wrong while searching",
+      });
     } finally {
       setIsLoading(false);
       setIsUserSearching(true);
@@ -42,7 +50,7 @@ function App() {
   const handlePageChange = async () => {
     try {
       setIsLoadingNextPage(true);
-      setNextPage("");
+      setError({});
 
       const response = await axios.post(`${apiUrl}/api/fetch-page`, {
         link: nextPage,
@@ -52,10 +60,18 @@ function App() {
 
       if (data?.results.length > 0) {
         setResults((prevResults) => [...prevResults, ...data.results]);
-        setNextPage(extractNextLinkHeader(next_page));
       }
-    } catch (e) {
-      console.error(e);
+
+      setNextPage(extractNextLinkHeader(next_page));
+    } catch (error) {
+      const err = error as AxiosError<{ detail: string }>;
+      console.error(err);
+
+      setError({
+        nextPage:
+          err?.response?.data?.detail ||
+          "Something went wrong while fetching the next page",
+      });
     } finally {
       setIsLoadingNextPage(false);
     }
@@ -65,11 +81,11 @@ function App() {
     <>
       <div className="flex justify-center">
         <div className="flex flex-col max-w-3xl items-center py-20">
-          <p className="sm:text-4xl text-2xl text-center font-bold">
-            Next Gen Restaurant Finder
+          <p className="sm:text-5xl text-3xl text-center font-bold">
+            Find What Feeds You
           </p>
           <p className="px-16 text-sm pt-2 text-center">
-            A simple restaurant finder powered by bleeding edge AI tech
+            A smart restaurant finder — and maybe more 👀
           </p>
           <div className="w-full max-w-lg mt-8 md:px-0 px-8">
             <div className="flex flex-col">
@@ -108,9 +124,14 @@ function App() {
                 {results.length > 0 ? (
                   <Results results={results} />
                 ) : (
-                  <div className="flex flex-row items-center justify-center mt-8">
-                    <Frown size={18} strokeWidth={3} className="me-2" />
-                    <p className="font-semibold">No Results</p>
+                  <div className="flex flex-col items-center mt-12">
+                    <div className="flex flex-row items-center">
+                      <Frown size={18} strokeWidth={2.5} className="me-2" />
+                      <p className="font-semibold text-xl">No Results</p>
+                    </div>
+                    {error?.fetch && (
+                      <p className="text-sm text-center pt-4">{error?.fetch}</p>
+                    )}
                   </div>
                 )}
               </>
@@ -122,7 +143,7 @@ function App() {
                   <Loader size={16} className="me-2" /> Loading
                 </>
               ) : (
-                <>
+                <div className="flex flex-col items-center">
                   {nextPage && (
                     <button
                       onClick={handlePageChange}
@@ -132,7 +153,13 @@ function App() {
                       Load Next Page
                     </button>
                   )}
-                </>
+
+                  {error?.nextPage && (
+                    <p className="text-sm text-center pt-4">
+                      {error?.nextPage}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </div>
