@@ -1,5 +1,5 @@
-# Next Gen Restaurant Finder
-A simple restaurant finder powered by bleeding edge AI tech
+# Find What Feeds You
+A smart restaurant finder — and maybe more 👀
 
 This project is a full-stack web app built with:
 
